@@ -375,6 +375,10 @@ section .container {
   color: #fff;
 }
 
+.education-content-wrapper, .portfolio-content-wrapper {
+    display: none; /* 초기에는 숨김 */
+}
+
 /*--------------------------------------------------------------
 # About
 --------------------------------------------------------------*/
@@ -1100,3 +1104,25 @@ section .container {
     transform: translateX(-50%);
   }
 }
+
+
+/* 메뉴 진입 시 재생될 애니메이션 */
+/* 애니메이션 컨테이너 기본 스타일 */
+.animation-container1 {
+    width: 1920px;  /* 프레임 하나 너비 예: 100px */
+    height: 1080px; /* 높이 예: 100px */
+    background-image: url(.../img/spritesheet/spritesheet1.png); /* 스프라이트 시트 이미지 경로 */
+    background-repeat: no-repeat;
+    /* 처음에는 애니메이션을 정지 상태로 둡니다 (재생 안 됨) */
+    animation-play-state: paused; 
+}
+
+.animation-container2 {
+    width: 1920px;  /* 프레임 하나 너비 예: 100px */
+    height: 1080px; /* 높이 예: 100px */
+    background-image: url(.../img/spritesheet/spritesheet2.png); /* 스프라이트 시트 이미지 경로 */
+    background-repeat: no-repeat;
+    /* 처음에는 애니메이션을 정지 상태로 둡니다 (재생 안 됨) */
+    animation-play-state: paused; 
+}
+

@@ -40,10 +40,18 @@
           setTimeout(function() {
             $("section").removeClass('section-show');
             $(hash).addClass('section-show');
+
+            // 추가 : 애니메이션 트리거 호출
+            triggerSpriteAnimation(hash); 
+
+
           }, 350);
         } else {
           $("section").removeClass('section-show');
           $(hash).addClass('section-show');
+
+          // 추가 : 애니메이션 트리거 호출
+          triggerSpriteAnimation(hash); 
         }
 
         if ($('body').hasClass('mobile-nav-active')) {
@@ -176,5 +184,84 @@ waypoint 플러그인을 사용하여 사용자가 해당 섹션을 볼 수 있�
   $(document).ready(function() {
     $('.venobox').venobox();
   });
+
+
+
+
+  /* 추가 : 스프라이트 애니메이션 함수 - CSS 클래스 이름을 사용하여 애니메이션을 프레임별로 재생 */
+// 전역 변수로 interval ID를 저장해 둡니다. (혹시 모를 중복 실행 방지용)
+  // 전역 변수로 timeout ID를 저장해 둡니다.
+ // 전역 변수로 timeout ID를 저장해 둡니다.
+  // 전역 변수로 timeout ID를 저장해 둡니다.
+  let activeAnimationTimeout = null;
+
+  function triggerSpriteAnimation(sectionHash) {
+      // 1. 기존에 실행 중인 애니메이션이 있다면 중지 및 초기화합니다.
+      if (activeAnimationTimeout) {
+          clearTimeout(activeAnimationTimeout);
+          activeAnimationTimeout = null;
+      }
+
+      // 모든 애니메이션 요소에서 기존 프레임 클래스 제거 (접두사 목록을 사용)
+      // 실제 사용하는 접두사로 변경하세요.
+      const prefixes = ['arm_moving1-Synfig-Animation-1-', 'arm_moving2-Synfig-Animation-1-']; 
+      
+      $('.my-animation-sprite').each(function() { 
+          for (const prefix of prefixes) {
+              // 대략적인 최대 프레임 수만큼 반복하여 클래스 제거 (최대 100프레임 가정)
+              for (let i = 0; i < 100; i++) { 
+                  $(this).removeClass(prefix + i.toString().padStart(4, '0'));
+              }
+          }
+      });
+
+      // 2. 애니메이션 실행 로직을 처리할 공통 함수
+      function startSpriteAnimation(spriteSelector, prefix, frameCount, duration, contentToShowSelector) {
+          const $sprite = $(spriteSelector);
+          let currentFrame = 0;
+
+          function playNextFrame() {
+              // 현재 프레임 클래스 추가
+              const currentFrameName = prefix + currentFrame.toString().padStart(4, '0');
+              $sprite.addClass(currentFrameName);
+
+              // 이전 프레임 클래스 제거 (현재 프레임 추가 후 제거하여 깜박임 최소화)
+              if (currentFrame > 0) {
+                  const previousFrameName = prefix + (currentFrame - 1).toString().padStart(4, '0');
+                  $sprite.removeClass(previousFrameName);
+              }
+
+              currentFrame++;
+
+              if (currentFrame < frameCount) {
+                  // 다음 프레임이 남았다면, 지정된 시간 후에 함수를 다시 호출합니다.
+                  activeAnimationTimeout = setTimeout(playNextFrame, duration);
+              } else {
+                  // 애니메이션 종료 (마지막 프레임 유지)
+                  console.log("Animation Finished for " + spriteSelector);
+                  activeAnimationTimeout = null;
+
+                  // 여기에 애니메이션 후에 나타날 요소를 보이게 하는 코드를 추가합니다.
+                  // ----------------------------------------------------
+                  $(contentToShowSelector).fadeIn(500); // 0.5초 동안 서서히 나타나게 함 (fadeIn 효과 사용)
+              }
+          }
+          
+          // 애니메이션 시작
+          playNextFrame();
+      }
+
+      // 3. 어떤 섹션인지 확인하여 애니메이션 실행 (여기에 sectionHash === 사용)
+      if (sectionHash === '#education') {
+          // education 섹션 진입 시 arm_moving1 애니메이션 실행
+          startSpriteAnimation('#education .my-animation-sprite', 'arm_moving1-Synfig-Animation-1-', 49, 30, '#education .education-content-wrapper');
+      } else if (sectionHash === '#portfolio') {
+          // projects 섹션 진입 시 arm_moving2 애니메이션 실행
+          startSpriteAnimation('#portfolio .my-animation-sprite', 'arm_moving2-Synfig-Animation-1-', 25, 30, '#portfolio .portfolio-content-wrapper');
+      }
+  }
+
+
+
 
 })(jQuery);
