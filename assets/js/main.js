@@ -135,25 +135,6 @@ waypoint 플러그인을 사용하여 사용자가 해당 섹션을 볼 수 있�
     offset: '80%'
   });
 
-  // Testimonials carousel (uses the Owl Carousel library)
-  /* Owl Carousel이라는 자바스크립트 라이브러리를 사용하여 "Testimonials (사용 후기)" 섹션의 슬라이더(캐러셀)를 설정하는 코드입니다.
-이 코드는 사용 후기가 자동으로 회전하며, 화면 크기에 따라 몇 개의 후기를 보여줄지 반응형으로 정의합니다. */
-  $(".testimonials-carousel").owlCarousel({
-    autoplay: true,
-    dots: true,
-    loop: true,
-    responsive: {
-      0: {
-        items: 1
-      },
-      768: {
-        items: 2
-      },
-      900: {
-        items: 3
-      }
-    }
-  });
 
   // Porfolio isotope and filter
   /*웹사이트의 포트폴리오 섹션에서 항목들을 정렬하고 필터링하는 기능을 구현하는 jQuery 코드입니다.
