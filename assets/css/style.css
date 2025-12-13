@@ -51,52 +51,95 @@ h1, h2, h3, h4, h5, h6 {
 
 
 /* 추가 : 보스 */
+/* style.css */
 /*--------------------------------------------------------------
 # Gost Object & Eye (인터랙티브 배경 객체)
 --------------------------------------------------------------*/
 .gost-object {
-    position: fixed; /* 화면 중앙에 고정 */
+    position: fixed; 
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%); 
-    width: 623px; /* 이미지 가로 크기 */
-    height: 900px; /* 이미지 세로 크기 */
-    opacity: 0.2; /* 20% 반투명 */
+    width: 623px; 
+    height: 900px; 
+    /* opacity: 0.2;  <-- 이 줄을 제거합니다! 상속의 원인입니다. */
+    z-index: 1; 
+    transition: transform 0.1s linear; 
+    /* 보스 본체의 배경 이미지는 이제 가상 요소로 이동합니다. */
+}
+
+/* 보스 객체의 실제 배경 이미지를 ::before 가상 요소로 처리 */
+.gost-object::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background-image: url('../img/boss/head.png'); /* 이미지 경로 설정 */
     background-size: contain;
     background-repeat: no-repeat;
-    z-index: 1; /* 헤더보다 낮은 z-index */
-    transition: transform 0.1s linear; /* 객체 움직임 부드럽게 */
+    /* 여기서 투명도를 설정합니다! */
+    opacity: 0.2; 
+    z-index: -1; /* 보스 본체의 콘텐츠(눈동자)보다 뒤로 보냅니다. */
 }
 
 .eye-wrapper {
-    position: absolute;
-    width: 69px; /* 눈동자 그룹의 너비 (원하는 크기로 조정) */
-    height: 69px; /* 눈동자 그룹의 높이 */
+    position: absolute; /* 다시 absolute로 변경, 부모(gost-object) 기준이 됨 */
+    width: 69px; 
+    height: 69px; 
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%); 
-    transition: transform 0.1s linear; /* 눈동자 움직임 부드럽게 */
+    transition: transform 0.1s linear; 
+    z-index: 2; /* ::before(z-index: -1) 위에 위치 */
+    
+    /* 눈동자는 이제 완전 선명합니다 (opacity: 1) */
 }
 
+/* eye, pupil CSS는 기존과 동일하게 유지 */
 .eye {
     width: 100%;
     height: 100%;
-    background: transparent;
-    border: 3px solid #a30000; /* 흰색 외곽선 */
+    border: 3px solid #a30000; 
     border-radius: 50%;
     position: relative;
 }
 
 .pupil {
-    width: 50%; /* 눈동자 내부 크기 */
+    width: 50%; 
     height: 50%;
-    background: #ff0000; /* 흰색 눈동자 */
+    background: #ff0000; 
     border-radius: 50%;
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); /* 중앙 정렬 */
+    transform: translate(-50%, -50%); 
+}
+
+
+/* 추가 : 보스 위에 상자를 만들고 투명도를 조절해서 페이드인 효과 구현 */
+.gost-overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    /* 보스 객체와 정확히 동일한 위치 및 크기 설정 */
+    width: 1920px; 
+    height: 1080px;
+    transform: translate(-50%, -50%);
+    
+    /* 중요: 배경색은 웹사이트의 실제 배경색과 일치해야 합니다 */
+    background-color: #010e1b; /* 예시: body 배경색이 #333 일 경우 */
+    
+    z-index: 10; /* 보스 객체보다 위에 위치 */
+    opacity: 1; /* 시작 시 불투명 */
+    transition: opacity 2s ease-out; /* 2초 동안 부드럽게 투명해짐 */
+    pointer-events: none; /* 오버레이가 마우스 이벤트를 방해하지 않도록 설정 */
+}
+
+/* JavaScript에서 이 클래스를 추가하여 애니메이션 트리거 */
+.gost-overlay.fade-out {
+    opacity: 0;
 }
 
 

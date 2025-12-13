@@ -246,56 +246,97 @@ waypoint 플러그인을 사용하여 사용자가 해당 섹션을 볼 수 있�
 
 // 추가 : 보스의 눈동자가 마우스를 따라다니는 코드
 // script.js (기존 마우스 이벤트 리스너 교체)
+// script.js (벽 뚫림 방지 및 중앙 초기화 로직 포함)
 
-  document.addEventListener('mousemove', function(e) {
-      const gostObject = document.querySelector('.gost-object');
-      const eyeWrapper = document.querySelector('.eye-wrapper');
+let currentDirection = 'none';
+const directionChangeThreshold = 30; 
+const returnToCenterDuration = 100; // 0.1초
 
-      // 1. 객체 전체 움직임 계산 (화면 중앙 기준)
-      const screenCenterX = window.innerWidth / 2;
-      const screenCenterY = window.innerHeight / 2;
-      const deltaX_screen = e.clientX - screenCenterX;
-      const deltaY_screen = e.clientY - screenCenterY;
-      const moveLimit_object = 80; // 객체가 움직일 최대 범위 (80px)
+document.addEventListener('mousemove', function(e) {
+    const gostObject = document.querySelector('.gost-object');
+    const eyeWrapper = document.querySelector('.eye-wrapper');
 
-      const objectFinalX = Math.max(-moveLimit_object, Math.min(moveLimit_object, deltaX_screen));
-      const objectFinalY = Math.max(-moveLimit_object, Math.min(moveLimit_object, deltaY_screen));
+    // 1. 객체 전체 움직임 계산 (기존과 동일)
+    const screenCenterX = window.innerWidth / 2;
+    const screenCenterY = window.innerHeight / 2;
+    const deltaX_screen = e.clientX - screenCenterX;
+    const deltaY_screen = e.clientY - screenCenterY;
+    const moveLimit_object = 80;
 
-      // 객체 위치 적용
-      gostObject.style.transform = `translate(-50%, -50%) translate(${objectFinalX}px, ${objectFinalY}px)`;
+    const objectFinalX = Math.max(-moveLimit_object, Math.min(moveLimit_object, deltaX_screen));
+    const objectFinalY = Math.max(-moveLimit_object, Math.min(moveLimit_object, deltaY_screen));
+
+    gostObject.style.transform = `translate(-50%, -50%) translate(${objectFinalX}px, ${objectFinalY}px)`;
+
+    // 2. 눈동자 움직임 계산 및 십자가 경로 제한
+
+    const gostRect = gostObject.getBoundingClientRect();
+    const centerOffsetX = gostRect.left + gostRect.width / 2;
+    const centerOffsetY = gostRect.top + gostRect.height / 2;
+
+    const deltaX_gost = e.clientX - centerOffsetX;
+    const deltaY_gost = e.clientY - centerOffsetY;
+
+    const limitX = (gostRect.width - eyeWrapper.offsetWidth) / 2; 
+    const limitY = (gostRect.height - eyeWrapper.offsetHeight) / 2; 
+
+    let eyeFinalX = 0;
+    let eyeFinalY = 0;
+
+    const absDeltaX = Math.abs(deltaX_gost);
+    const absDeltaY = Math.abs(deltaY_gost);
+    
+    let newDirection;
+    if (absDeltaX > absDeltaY + directionChangeThreshold) {
+        newDirection = 'horizontal';
+    } else if (absDeltaY > absDeltaX + directionChangeThreshold) {
+        newDirection = 'vertical';
+    } else {
+        newDirection = currentDirection;
+    }
+
+    // 핵심 로직: 경로 전환 감지 및 중앙 초기화 (벽 뚫림 방지)
+    if (currentDirection !== newDirection && currentDirection !== 'none') {
+        // 방향 전환 시 중앙으로 이동
+        eyeWrapper.style.transform = `translate(-50%, -50%) translate(0px, 0px)`;
+        
+        setTimeout(() => {
+            currentDirection = newDirection;
+        }, returnToCenterDuration); 
+
+        return; // 이 프레임에서는 이동을 멈추고 다음 프레임을 기다립니다.
+        
+    } else {
+        currentDirection = newDirection;
+    }
+    
+    // 최종 위치 계산 (십자가 로직)
+    if (currentDirection === 'horizontal') {
+        eyeFinalY = 0;
+        eyeFinalX = Math.max(-limitX, Math.min(limitX, deltaX_gost));
+    } else if (currentDirection === 'vertical') {
+        eyeFinalX = 0;
+        eyeFinalY = Math.max(-limitY, Math.min(limitY, deltaY_gost));
+    }
+
+    // 눈동자 위치 적용
+    eyeWrapper.style.transform = `translate(-50%, -50%) translate(${eyeFinalX}px, ${eyeFinalY}px)`;
+});
 
 
-      // 2. 눈동자 움직임 계산 (객체 중심 기준 + 십자가 경로 제한)
+// 보스의 페이드인 효과 구현
+// DOM 콘텐츠 로드 시 오버레이 투명화 시작
+document.addEventListener('DOMContentLoaded', function() {
+    const gostOverlay = document.querySelector('.gost-overlay');
 
-      // gostObject의 현재 위치와 크기를 다시 계산
-      const gostRect = gostObject.getBoundingClientRect();
-      const centerOffsetX = gostRect.left + gostRect.width / 2;
-      const centerOffsetY = gostRect.top + gostRect.height / 2;
+    if (gostOverlay) {
+        // 페이지 로드 후 약간의 딜레이 후 페이드 아웃 시작
+        setTimeout(() => {
+            gostOverlay.classList.add('fade-out');
+        }, 100); 
+    }
+});
 
-      const deltaX_gost = e.clientX - centerOffsetX;
-      const deltaY_gost = e.clientY - centerOffsetY;
-
-      // 움직임 제한 범위 계산 (눈동자 그룹이 100px일 때)
-      const limitX = gostRect.width / 2 - 50; 
-      const limitY = gostRect.height / 2 - 50; 
-
-      let eyeFinalX = 0;
-      let eyeFinalY = 0;
-
-      // 십자가 경로 제한 로직
-      if (Math.abs(deltaX_gost) > Math.abs(deltaY_gost)) {
-          // 수평 축 움직임
-          eyeFinalY = 0;
-          eyeFinalX = Math.max(-limitX, Math.min(limitX, deltaX_gost));
-      } else {
-          // 수직 축 움직임
-          eyeFinalX = 0;
-          eyeFinalY = Math.max(-limitY, Math.min(limitY, deltaY_gost));
-      }
-
-      // 눈동자 위치 적용 (eye-wrapper는 이미 CSS translate(-50%, -50%)로 중앙 정렬됨)
-      eyeWrapper.style.transform = `translate(-50%, -50%) translate(${eyeFinalX}px, ${eyeFinalY}px)`;
-  });
 
 
 
