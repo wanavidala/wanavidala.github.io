@@ -17,7 +17,10 @@ body {
   color: #fff;
   position: relative;
   background: transparent;
+  margin: 0;
+  overflow: hidden;
 }
+
 
 body::before {
   content: "";
@@ -124,8 +127,8 @@ h1, h2, h3, h4, h5, h6 {
     top: 50%;
     left: 50%;
     /* 보스 객체와 정확히 동일한 위치 및 크기 설정 */
-    width: 1920px; 
-    height: 1080px;
+    width: 100%; 
+    height: 100%;
     transform: translate(-50%, -50%);
     
     /* 중요: 배경색은 웹사이트의 실제 배경색과 일치해야 합니다 */
@@ -216,7 +219,7 @@ overflow-y: auto;: 내용이 많아 세로로 넘칠 경우에만 스크롤바�
 }
 
 #header .social-links a:hover {
-  background: #1c7d32;
+  background: #68c0e6;
 }
 
 @media (max-width: 992px) {
@@ -267,7 +270,7 @@ overflow-y: auto;: 내용이 많아 세로로 넘칠 경우에만 스크롤바�
   display: block;
   position: relative;
   color: #fff;
-  font-size: 19px;
+  font-size: 22px;
   font-family: "Poppins", sans-serif;
   font-weight: 400;
 }
@@ -279,7 +282,7 @@ overflow-y: auto;: 내용이 많아 세로로 넘칠 경우에만 스크롤바�
   height: 2px;
   bottom: -4px;
   left: 0;
-  background-color: #9e7f25;
+  background-color: #00f2ff;
   visibility: hidden;
   width: 0px;
   transition: all 0.3s ease-in-out 0s;
@@ -291,7 +294,7 @@ overflow-y: auto;: 내용이 많아 세로로 넘칠 경우에만 스크롤바�
 }
 
 .nav-menu a:hover, .nav-menu .active > a, .nav-menu li:hover > a {
-  color: #12d640;
+  color: #01fdba;
   text-decoration: none;
 }
 
@@ -348,7 +351,7 @@ overflow-y: auto;: 내용이 많아 세로로 넘칠 경우에만 스크롤바�
 }
 
 .mobile-nav a:hover, .mobile-nav .active > a, .mobile-nav li:hover > a {
-  color: #1c7d32;
+  color: #0084ff;
   text-decoration: none;
 }
 
@@ -508,9 +511,50 @@ section .container {
   color: #fff;
 }
 
-.education-content-wrapper, .portfolio-content-wrapper {
+
+/*--------------------------------------------------------------
+추가 : arm_moving1 애니메이션 관련 설정
+------------------------------------------------------------*/
+
+/* 페이드 인을 위해 에듀케이션과 포트폴리오의 내용물을 감싸는 블록 */
+.education-content-wrapper, .portfolio-content-wrapper {  
     display: none; /* 초기에는 숨김 */
 }
+
+/* Animation sprite positioning and responsive behavior */
+#education {
+    position: relative; /* 자식 애니메이션 요소의 절대 배치 기준 */
+    overflow: visible; /* 커진 애니메이션이 잘리지 않게 허용 */
+}
+
+#education .my-animation-sprite {
+    position: absolute;
+    left: 50%;
+    top: 0%; /* 화면 위로 약간 올림 */
+    transform: translate(-50%, -27%) scale(1); /* 중앙 정렬 유지, 크기 변동 없음 */
+    transform-origin: center center;
+    z-index: 10;
+    pointer-events: none;
+    transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1), opacity 400ms ease;
+    opacity: 1;
+}
+
+/* 모바일에서는 중앙보다 약간 왼쪽에 배치하고 오른쪽으로 90도 회전 */
+@media (max-width: 768px) {
+    #education .my-animation-sprite {
+        left: 45%;
+        top: 35%;
+        transform: translate(-45%, -50%) rotate(90deg) scale(1); /* 90도 회전, 크기 유지 */
+        transform-origin: center center;
+        opacity: 1;
+    }
+}
+
+/*--------------------------------------------------------------
+추가 : arm_moving2 애니메이션 관련 설정
+------------------------------------------------------------*/
+/* Animation sprite positioning and responsive behavior */
+
 
 /*--------------------------------------------------------------
 # About
@@ -518,7 +562,7 @@ section .container {
 .about-me .content h3 {
   font-weight: 700;
   font-size: 26px;
-  color: #1c7d32;
+  color: #0084ff;
 }
 
 .about-me .content ul {
@@ -533,7 +577,7 @@ section .container {
 .about-me .content ul i {
   font-size: 20px;
   padding-right: 2px;
-  color: #1c7d32;
+  color: #0084ff;
 }
 
 .about-me .content p:last-child {
@@ -541,110 +585,73 @@ section .container {
 }
 
 /*--------------------------------------------------------------
-# Counts
+# education
 --------------------------------------------------------------*/
-.counts {
-  padding: 70px 0 60px;
-}
 
-.counts .count-box {
-  padding: 30px 30px 25px 30px;
-  width: 100%;
-  position: relative;
-  text-align: center;
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.counts .count-box i {
-  position: absolute;
-  top: -25px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 24px;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 12px;
-  color: #1c7d32;
-  border-radius: 50px;
-}
-
-.counts .count-box span {
-  font-size: 36px;
-  display: block;
-  font-weight: 600;
-  color: #fff;
-}
-
-.counts .count-box p {
-  padding: 0;
-  margin: 0;
-  font-family: "Raleway", sans-serif;
-  font-size: 14px;
-}
-
-/*--------------------------------------------------------------
-# Skills
---------------------------------------------------------------*/
-.skills .progress {
-  height: 50px;
-  display: block;
-  background: none;
-}
-
-.skills .progress .skill {
-  padding: 0;
-  margin: 0 0 6px 0;
-  text-transform: uppercase;
-  display: block;
-  font-weight: 600;
-  font-family: "Poppins", sans-serif;
-  color: #fff;
-}
-
-.skills .progress .skill .val {
-  float: right;
-  font-style: normal;
-}
-
-.skills .progress-bar-wrap {
-  background: rgba(255, 255, 255, 0.15);
-}
-
-.skills .progress-bar {
-  width: 1px;
-  height: 10px;
-  transition: .9s;
-  background-color: #1c7d32;
-}
-
-/*--------------------------------------------------------------
-# Interests
---------------------------------------------------------------*/
-.interests .icon-box {
+.education-content-wrapper {
   display: flex;
-  align-items: center;
+  justify-content: center;   /* 가로 중앙 */
+  align-items: center;       /* 세로 중앙 */
+  height: 100vh;             /* 화면 전체 높이 */
+  gap: 60px;                 /* 카드 사이 간격 */
+}
+
+/* 카드 스타일 */
+.card {
+  color: #f7f7f7;
+  width: 220px;
+  height: 350px;
   padding: 20px;
-  background: #09203a;
-  transition: ease-in-out 0.3s;
+  margin-bottom: 100px;
+  background: #100924a7;
+  border :5px solid rgb(52, 30, 137);
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(3, 12, 73, 0.1);
+  text-align: center;
+  justify-content: center;
 }
 
-
-.interests .icon-box i {
-  font-size: 32px;
-  padding-right: 10px;
-  line-height: 1;
+.card h3 {
+  font-size: 35px;
 }
 
-.interests .icon-box h3 {
-  font-weight: 700;
-  margin: 0;
-  padding: 0;
-  line-height: 1;
-  font-size: 16px;
-  color: #fff;
+.card p {
+  font-size: 30px;
+  margin-top: 10px;
 }
 
-.interests .icon-box:hover {
-  background: #042b56eb;
+.card:hover {
+  border :5px solid #00aaff;
+}
+
+/* Education wrapper and link styles for venobox popups */
+.education-content-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  align-items: center;
+}
+
+.education-content-wrapper a {
+  text-decoration: none;
+  color: inherit;
+  display: inline-block;
+}
+
+.education-content-wrapper a:focus,
+.education-content-wrapper a:hover {
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+   body {
+    overflow-y: auto;   /* 모바일에서 세로 스크롤 허용 */
+  }
+  .education-content-wrapper {
+    flex-direction: column; /* 세로 정렬 */
+    gap : 15px;           /* 카드 사이 간격 축소 */
+    height: auto;        /* 높이 자동 조절 */
+  }
 }
 
 /*--------------------------------------------------------------
@@ -671,7 +678,7 @@ section .container {
   font-weight: 600;
   text-transform: uppercase;
   font-family: "Poppins", sans-serif;
-  color: #1c7d32;
+  color: #0084ff;
   margin-bottom: 10px;
 }
 
@@ -723,7 +730,7 @@ section .container {
   margin: 0 auto;
   width: 64px;
   height: 64px;
-  background: #1c7d32;
+  background: #0084ff;
   border-radius: 5px;
   transition: all .3s ease-out 0s;
   display: flex;
@@ -769,7 +776,7 @@ section .container {
 
 .services .icon-box:hover {
   background: #042e5f;
-  border-color: #1c7d32;
+  border-color: #0084ff;
 }
 
 .services .icon-box:hover .icon {
@@ -777,7 +784,7 @@ section .container {
 }
 
 .services .icon-box:hover .icon i {
-  color: #1c7d32;
+  color: #0084ff;
 }
 
 .services .icon-box:hover .icon::before {
@@ -791,6 +798,31 @@ section .container {
 /*--------------------------------------------------------------
 # Portfolio
 --------------------------------------------------------------*/
+
+/* 추가 : 스크롤 박스의 설정 */
+.portfolio-scroll-wrapper {
+  max-height: 70vh;        /* 원하는 높이 지정 */
+  overflow-y: auto;        /* 세로 스크롤 */
+  overflow-x: hidden;      /* 가로 스크롤 제거 */
+  padding-right: 10px;     /* 스크롤바 때문에 밀림 방지 */
+}
+
+/* 추가 : 스크롤바 꾸미기 */
+.portfolio-scroll-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.portfolio-scroll-wrapper::-webkit-scrollbar-thumb {
+  background: #0084ff;
+  border-radius: 4px;
+}
+
+.portfolio-scroll-wrapper::-webkit-scrollbar-track {
+  background: #010e1b;
+}
+
+
+
 .portfolio .portfolio-item {
   margin-bottom: 30px;
 }
@@ -820,7 +852,7 @@ section .container {
 }
 
 .portfolio #portfolio-flters li:hover, .portfolio #portfolio-flters li.filter-active {
-  background: #1c7d32;
+  background: #0084ff;
 }
 
 .portfolio #portfolio-flters li:last-child {
@@ -966,7 +998,7 @@ section .container {
 
 .contact .info-box h3 {
   font-size: 20px;
-  color: #28a745;
+  color: #0099ff;
   font-weight: 700;
   margin: 10px 0 8px 68px;
 }
@@ -1022,7 +1054,7 @@ section .container {
 .contact .php-email-form .sent-message {
   display: none;
   background: rgba(255, 255, 255, 0.08);
-  background: #1c7d32;
+  background: #0084ff;
   text-align: center;
   padding: 15px;
   font-weight: 600;
@@ -1042,7 +1074,7 @@ section .container {
   width: 24px;
   height: 24px;
   margin: 0 10px -6px 0;
-  border: 3px solid #1c7d32;
+  border: 3px solid #0084ff;
   border-top-color: #eee;
   -webkit-animation: animate-loading 1s linear infinite;
   animation: animate-loading 1s linear infinite;
@@ -1096,7 +1128,7 @@ section .container {
 }
 
 .contact .php-email-form button[type="submit"] {
-  background: #1c7d32;
+  background: #0084ff;
   border: 0;
   padding: 10px 30px;
   color: #fff;
@@ -1105,7 +1137,7 @@ section .container {
 }
 
 .contact .php-email-form button[type="submit"]:hover {
-  background: #15bb62;
+  background: #00f7ff;
 }
 
 @-webkit-keyframes animate-loading {
@@ -1139,7 +1171,7 @@ section .container {
 }
 
 .credits a {
-  color: #1c7d32;
+  color: #0084ff;
   transition: 0.3s;
 }
 
@@ -1153,26 +1185,5 @@ section .container {
     right: 0;
     transform: translateX(-50%);
   }
-}
-
-
-/* 메뉴 진입 시 재생될 애니메이션 */
-/* 애니메이션 컨테이너 기본 스타일 */
-.animation-container1 {
-    width: 1920px;  /* 프레임 하나 너비 예: 100px */
-    height: 1080px; /* 높이 예: 100px */
-    background-image: url(.../img/spritesheet/spritesheet1.png); /* 스프라이트 시트 이미지 경로 */
-    background-repeat: no-repeat;
-    /* 처음에는 애니메이션을 정지 상태로 둡니다 (재생 안 됨) */
-    animation-play-state: paused; 
-}
-
-.animation-container2 {
-    width: 1920px;  /* 프레임 하나 너비 예: 100px */
-    height: 1080px; /* 높이 예: 100px */
-    background-image: url(.../img/spritesheet/spritesheet2.png); /* 스프라이트 시트 이미지 경로 */
-    background-repeat: no-repeat;
-    /* 처음에는 애니메이션을 정지 상태로 둡니다 (재생 안 됨) */
-    animation-play-state: paused; 
 }
 

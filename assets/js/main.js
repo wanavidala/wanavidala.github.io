@@ -114,26 +114,7 @@
     $(".mobile-nav, .mobile-nav-toggle").hide();
   }
 
-  // jQuery counterUp
-  /*이 코드는 사용자가 웹 페이지를 스크롤하여 특정 통계 섹션(예: "프로젝트 완료 수", "수상 경력", "고객 만족도")에 도달했을 때, 
-  숫자가 0부터 시작하여 최종 목표 숫자까지 빠르게 올라가는 동적인 애니메이션 효과를 부여합니다. */
-  $('[data-toggle="counter-up"]').counterUp({
-    delay: 10,
-    time: 1000
-  });
 
-  // Skills section
-  /*이 코드는 웹사이트 방문자가 "Skills" 섹션까지 스크롤하면, 
-  미리 설정된 숙련도(예: 90%)만큼 프로그레스 바가 움직이는 애니메이션 효과를 발생시킵니다.
-waypoint 플러그인을 사용하여 사용자가 해당 섹션을 볼 수 있는 위치에 도달했을 때만 애니메이션이 실행되도록 하여, 
-웹사이트의 성능을 최적화하고 시각적인 흥미를 유발합니다. */
-  $('.skills-content').waypoint(function() {
-    $('.progress .progress-bar').each(function() {
-      $(this).css("width", $(this).attr("aria-valuenow") + '%');
-    });
-  }, {
-    offset: '80%'
-  });
 
 
   // Porfolio isotope and filter
@@ -201,6 +182,8 @@ waypoint 플러그인을 사용하여 사용자가 해당 섹션을 볼 수 있�
           const $sprite = $(spriteSelector);
           let currentFrame = 0;
 
+          $(contentToShowSelector).hide(); // 애니메이션 시작 전에 콘텐츠 숨기기 
+
           function playNextFrame() {
               // 현재 프레임 클래스 추가
               const currentFrameName = prefix + currentFrame.toString().padStart(4, '0');
@@ -234,7 +217,7 @@ waypoint 플러그인을 사용하여 사용자가 해당 섹션을 볼 수 있�
 
       // 3. 어떤 섹션인지 확인하여 애니메이션 실행 (여기에 sectionHash === 사용)
       if (sectionHash === '#education') {
-          // education 섹션 진입 시 arm_moving1 애니메이션 실행
+          // education 섹션 진입 시 arm_moving1 애니메이션 실행 (크기/이동 없음)
           startSpriteAnimation('#education .my-animation-sprite', 'arm_moving1-Synfig-Animation-1-', 49, 30, '#education .education-content-wrapper');
       } else if (sectionHash === '#portfolio') {
           // projects 섹션 진입 시 arm_moving2 애니메이션 실행
