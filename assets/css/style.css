@@ -457,6 +457,7 @@ section {
   bottom: 100%;
   opacity: 0;
   z-index: 2;
+  pointer-events: none; /* 추가 : 보이지 않는 섹션은 클릭 통과 */
 }
 
 section.section-show {
@@ -464,6 +465,7 @@ section.section-show {
   bottom: auto;
   opacity: 1;
   padding-bottom: 0px;
+  pointer-events: auto; /* 추가 : active 섹션만 클릭 허용 */
 }
 
 section .container {
@@ -554,6 +556,56 @@ section .container {
 추가 : arm_moving2 애니메이션 관련 설정
 ------------------------------------------------------------*/
 /* Animation sprite positioning and responsive behavior */
+#portfolio {
+    position: relative; /* 자식 애니메이션 요소의 절대 배치 기준 */
+    overflow: visible; /* 커진 애니메이션이 잘리지 않게 허용 */
+    height: 100vh; /* 포트폴리오 섹션이 화면 전체 높이를 차지하도록 설정 */
+}
+
+#portfolio .my-animation-sprite {
+    position: absolute;
+    left: 50%;
+    top: 0%; /* 화면 위로 약간 올림 */
+    transform: translate(-42%, -110%) scale(1); /* 중앙 정렬 유지, 크기 변동 없음 */
+    transform-origin: center center;
+    z-index: 10;
+    pointer-events: none;
+    transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1), opacity 400ms ease;
+    opacity: 1;
+}
+
+@media (max-width: 768px) {
+    #portfolio .my-animation-sprite {
+        left: 39%;
+        top: 0%;
+        transform: translate(-39%, -170%) scale(1); /* 크기 유지 */
+        transform-origin: center center;
+        opacity: 1;
+    }
+}
+
+.line {    /* 손으로 그을 선 */  
+  position: fixed;
+  top: 86%;                  /* 부모 기준 세로 중앙 */
+  left: 50%;                 /* 부모 기준 가로 중앙 */
+  transform: translate(-50%, -50%); /* 완전 중앙 맞춤 */
+  width: 695px;
+  height: 2px;
+  background: #bbdeff;
+  border: 3px solid #bbdeff;
+  border-radius: 5px;
+  margin: 20px 0;
+}
+
+@media (max-width: 768px) {
+  .line {    /* 손으로 그을 선 */  
+    position: fixed;
+    top: 90%;                  /* 부모 기준 세로 중앙 */
+    width: 420px;
+    height: 5px;
+  }
+}
+
 
 
 /*--------------------------------------------------------------
@@ -799,12 +851,36 @@ section .container {
 # Portfolio
 --------------------------------------------------------------*/
 
+
+.portfolio-content-wrapper {
+  position: fixed;        /* 위치 지정 가능 */
+  top: 50%;                  /* 부모 기준 세로 중앙 */
+  left: 50%;                 /* 부모 기준 가로 중앙 */
+  transform: translate(-50%, -50%); /* 완전 중앙 맞춤 */
+  display: flex;             /* flex 컨테이너 */
+  justify-content: center;   /* 가로 중앙 */
+  align-items: center;       /* 세로 중앙 */
+  flex-direction: column; /* 세로 방향 정렬 */
+  height: 100vh;             /* 높이 */
+  width: 700px;              /* 가로 크기 제한 */
+  gap: 60px;                 /* 카드 사이 간격 */
+}
+
+
 /* 추가 : 스크롤 박스의 설정 */
 .portfolio-scroll-wrapper {
-  max-height: 70vh;        /* 원하는 높이 지정 */
+  top: 20%;
+  max-height: 60vh;        /* 원하는 높이 지정 */
   overflow-y: auto;        /* 세로 스크롤 */
   overflow-x: hidden;      /* 가로 스크롤 제거 */
   padding-right: 10px;     /* 스크롤바 때문에 밀림 방지 */
+}
+
+@media (max-width: 768px) {
+    .portfolio-content-wrapper {
+        width: 90vw;          /* 모바일에서 가로 크기 조정 */
+        max-height: 50vh;    /* 모바일에서 높이 조정 */
+    }
 }
 
 /* 추가 : 스크롤바 꾸미기 */
@@ -824,6 +900,7 @@ section .container {
 
 
 .portfolio .portfolio-item {
+  width: 100%;
   margin-bottom: 30px;
 }
 

@@ -152,10 +152,96 @@
 
   /* 추가 : 스프라이트 애니메이션 함수 - CSS 클래스 이름을 사용하여 애니메이션을 프레임별로 재생 */
 // 전역 변수로 interval ID를 저장해 둡니다. (혹시 모를 중복 실행 방지용)
-  // 전역 변수로 timeout ID를 저장해 둡니다.
- // 전역 변수로 timeout ID를 저장해 둡니다.
-  // 전역 변수로 timeout ID를 저장해 둡니다.
   let activeAnimationTimeout = null;
+
+  function triggerSpriteAnimation(sectionHash) {
+      // 1️⃣ 기존 실행 중인 애니메이션 초기화
+      if (activeAnimationTimeout) {
+          clearTimeout(activeAnimationTimeout);
+          activeAnimationTimeout = null;
+      }
+
+      // 2️⃣ 모든 프레임 클래스 제거
+      const prefixes = ['arm_moving1-Synfig-Animation-1-', 'arm_moving2-Synfig-Animation-1-'];
+      $('.my-animation-sprite').each(function() {
+          for (const prefix of prefixes) {
+              for (let i = 0; i < 100; i++) {
+                  $(this).removeClass(prefix + i.toString().padStart(4, '0'));
+              }
+          }
+      });
+
+      // 3️⃣ 포트폴리오 섹션 전용 초기화 (팔 투명도, 막대 길이)
+      if (sectionHash === '#portfolio') {
+          const $sprite = $('#portfolio .my-animation-sprite');
+          const $bar = $('#portfolio .line');
+
+          // 팔은 완전히 보이도록
+          $sprite.css({ opacity: 1 });
+
+          // 막대는 초기 길이 유지 (0으로 초기화하면 첫 호출 전까지 보이지 않음)
+          $bar.css({ width: $bar.width(0) }); // 기존 width 유지
+      }
+
+      // 4️⃣ 애니메이션 재생 공통 함수
+      function startSpriteAnimation(spriteSelector, prefix, frameCount, duration, contentSelector) {
+          const $sprite = $(spriteSelector);
+          let currentFrame = 0;
+
+          $(contentSelector).hide(); // 콘텐츠 숨기기
+
+          function playNextFrame() {
+              const currentFrameName = prefix + currentFrame.toString().padStart(4, '0');
+              $sprite.addClass(currentFrameName);
+
+              if (currentFrame > 0) {
+                  const previousFrameName = prefix + (currentFrame - 1).toString().padStart(4, '0');
+                  $sprite.removeClass(previousFrameName);
+              }
+
+              currentFrame++;
+
+              if (currentFrame < frameCount) {
+                  activeAnimationTimeout = setTimeout(playNextFrame, duration);
+              } else {
+                  activeAnimationTimeout = null;
+
+                  // 🟢 포트폴리오 섹션일 때 팔 fadeOut + 막대 확장
+                  if (prefix === 'arm_moving2-Synfig-Animation-1-') {
+                      const $sprite = $(spriteSelector);
+                      const $bar = $('#portfolio .line');
+                      const moveDuration = 400; // 팔 fadeOut 0.4초
+                      const barDuration = 800;  // 막대 확장 0.8초
+
+                      // 팔 fadeOut
+                      $sprite.animate({ opacity: 0 }, moveDuration);
+
+                      // 막대 확장
+                      $bar.animate({ width: '100%' }, barDuration, function() {
+                          // 막대 확장 끝난 후 콘텐츠 fadeIn
+                          $(contentSelector).fadeIn(500);
+                      });
+
+                  } else {
+                      // 에듀케이션 등 일반 섹션은 기존대로 fadeIn
+                      $(contentSelector).fadeIn(500);
+                  }
+              }
+          }
+
+          playNextFrame();
+      }
+
+      // 5️⃣ 섹션별 애니메이션 실행
+      if (sectionHash === '#education') {
+          startSpriteAnimation('#education .my-animation-sprite', 'arm_moving1-Synfig-Animation-1-', 49, 30, '#education .education-content-wrapper');
+      } else if (sectionHash === '#portfolio') {
+          startSpriteAnimation('#portfolio .my-animation-sprite', 'arm_moving2-Synfig-Animation-1-', 25, 30, '#portfolio .portfolio-content-wrapper');
+      }
+  }
+
+  /*
+    let activeAnimationTimeout = null;
 
   function triggerSpriteAnimation(sectionHash) {
       // 1. 기존에 실행 중인 애니메이션이 있다면 중지 및 초기화합니다.
@@ -205,9 +291,11 @@
                   console.log("Animation Finished for " + spriteSelector);
                   activeAnimationTimeout = null;
 
+                  
                   // 여기에 애니메이션 후에 나타날 요소를 보이게 하는 코드를 추가합니다.
                   // ----------------------------------------------------
-                  $(contentToShowSelector).fadeIn(500); // 0.5초 동안 서서히 나타나게 함 (fadeIn 효과 사용)
+                  $(contentToShowSelector).fadeIn(500);  // 0.5초 동안 서서히 나타나게 함 (fadeIn 효과 사용)
+                
               }
           }
           
@@ -215,7 +303,7 @@
           playNextFrame();
       }
 
-      // 3. 어떤 섹션인지 확인하여 애니메이션 실행 (여기에 sectionHash === 사용)
+      // 4. 어떤 섹션인지 확인하여 애니메이션 실행 (여기에 sectionHash === 사용)
       if (sectionHash === '#education') {
           // education 섹션 진입 시 arm_moving1 애니메이션 실행 (크기/이동 없음)
           startSpriteAnimation('#education .my-animation-sprite', 'arm_moving1-Synfig-Animation-1-', 49, 30, '#education .education-content-wrapper');
@@ -225,6 +313,8 @@
       }
   }
 
+  
+  */
 
 
 // 추가 : 보스의 눈동자가 마우스를 따라다니는 코드
