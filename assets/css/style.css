@@ -1076,6 +1076,72 @@ section .container {
 /*--------------------------------------------------------------
 # Contact
 --------------------------------------------------------------*/
+
+/* 추가 : 팔 애니메이션 스타일 */
+.arm-layer {
+  position: absolute;
+  /* 시작 위치 */
+  top: -700px;  /* 위에서 얼마나 떨어져있는지 */
+  left: 10%;   /* 왼쪽에서 얼마나 떨어져있는지 */
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 20;
+}
+
+.arm {
+  width: 60px;
+  height: 250px;
+  background: linear-gradient(#aaa, #666);
+  border-radius: 30px;
+  transform: translateY(-100%);
+  transition: transform 0.6s ease;
+}
+
+.contact-me.grabbed .contact-content {
+  transform: translateY(-80px) scale(0.95);
+  opacity: 0;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.contact-content {
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+
+/* 추가 : 연락처 섹션 스타일 */
+.contact-me {
+  position: relative;
+  z-index: 1;
+  height: 500px;
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  background-color: #010e1b;
+  border: 3px solid #1a1a7e;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(3, 12, 73, 0.1);
+  font-size: 16px;
+  margin: 0 auto 20px;
+  padding: 20px;
+  gap: 10px;
+  overflow: visible;   /* 팔 애니메이션이 잘리지 않도록 설정 */
+}
+
+.contact-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+button[type="submit"] {
+  margin-top: 10px;
+  color: #fff;
+  background-color: #60caff;
+  border: 2px solid #0084ff;
+  border-radius: 15px;
+}
+
+
 .contact .info-box {
   color: #444444;
   padding: 20px;

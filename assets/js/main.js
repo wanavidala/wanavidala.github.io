@@ -335,6 +335,32 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+/* 연락처 폼 애니메이션 */
+const form = document.getElementById("contactForm");
+const arm = form.querySelector(".arm");
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault(); // 재로딩 방지
+
+  // 1. 팔 내려오기
+  arm.style.transform = "translateY(170px)";  // 괄호 안에 더 이동 시키고 싶은 거리
+
+  // 2. 잠깐 후 폼 잡기
+  setTimeout(() => {
+    form.classList.add("grabbed");
+  }, 400);
+
+  // 3. 팔 + 폼 위로 사라짐
+  setTimeout(() => {
+    arm.style.transform = "translateY(-100%)";
+  }, 900);
+
+  // 4. 폼 초기화 & 복귀
+  setTimeout(() => {
+    form.reset();
+    form.classList.remove("grabbed");
+  }, 1500);
+});
 
 
 
