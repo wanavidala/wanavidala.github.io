@@ -1,3 +1,10 @@
+/*
+ JS 연관 정보:
+ - 관련 스크립트: assets/js/main.js (triggerSpriteAnimation)
+ - 역할: 각 프레임은 클래스명 `arm_moving1-Synfig-Animation-1-0000` 같은 형식으로 정의되어 있으며,
+     JS에서 해당 클래스를 순차적으로 추가/제거하여 프레임 애니메이션을 구현합니다.
+     (프레임 당 background-position을 통해 스프라이트 이미지를 표시)
+*/
 .arm_moving1 {
     background-image: url(spritesheet1.png);
     background-repeat: no-repeat;
